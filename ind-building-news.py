@@ -31,9 +31,9 @@ for url in urls:
     News = title + content
     localTime = time.strftime("%Y%m%d%H%M%S", time.localtime())
     print title
-    '''print localTime
+    print localTime
     filename = "E:\\python project\\1\\"+localTime+".txt"
     file = open(filename,'w')
     file.write(News)
     file.close()
-    time.sleep(1)'''
+    time.sleep(1)
