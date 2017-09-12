@@ -12,5 +12,5 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 url = 'http://m.mm131.com'
 r= requests.get(url).text
-html_doc = r.encode('utf-8')
+html_doc = r.encode('UTF8')
 print html_doc
