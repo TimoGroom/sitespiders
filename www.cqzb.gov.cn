@@ -1,0 +1,38 @@
+#!/usr/bin/env python  
+# encoding: utf-8   
+""" 
+@Author:timo
+time:#20170930
+"""
+import requests
+from bs4 import BeautifulSoup
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
+site = 'http://www.cqzb.gov.cn/'
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 UBrowser/6.1.2107.204 Safari/537.36'
+}
+page1 = requests.get('http://www.cqzb.gov.cn/class-5-1.aspx', headers=headers)
+page1_soup = BeautifulSoup(page1.text, 'lxml')
+pagenum = page1_soup.find("td").text.strip()[-5:-1]
+urls = ['http://www.cqzb.gov.cn/class-5-1({}).aspx'.format(str(i)) for i in range(1, int(pagenum) + 1, 1)]
+
+for url in urls:
+    list = requests.get(url, headers=headers)
+    list.encoding = "utf-8"
+    list_soup = BeautifulSoup(list.text, 'lxml')
+    list_tables = list_soup.select("div.ztb_list_right > ul > li > a")
+    datatimes = list_soup.select("li > span")
+    for datatime in datatimes:
+        datetime = datatime.text[1:-1]
+        for list_table in list_tables:
+            bidlink = site + list_table.get('href')
+            bidtitle = list_table.get('title').strip()
+            biddings = datetime+","+bidtitle+","+bidlink
+            print biddings
+            with open('biding.txt', 'a') as f:
+                    f.write(""+biddings+ "\n")
+                    f.close()
